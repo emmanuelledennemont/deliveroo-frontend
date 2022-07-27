@@ -1,24 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import Header from "./components/Header";
+import Sections from "./components/Sections";
+import Basket from "./components/Basket";
+
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+library.add(faStar);
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  const [data, setData] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+  const [basket, setBasket] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "https://delivery-bck-clone.herokuapp.com"
+      );
+      setData(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  return isLoading ? (
+    <h2>Is Loading... </h2>
+  ) : (
+    <>
+      <Header data={data} />
+      <main className="container">
+      <Sections categories={data.categories} basket={basket} setBasket={setBasket}/>
+      <Basket basket={basket} setBasket={setBasket} restaurant={data.restaurant.name}/>
+      </main>
+    </>
   );
 }
 
