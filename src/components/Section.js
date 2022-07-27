@@ -29,9 +29,7 @@ const Section = ({ title, menus, basket, setBasket }) => {
                   }
                 }
 
-                {
                   isHere === false && copyBasketArray.push(obj);
-                }
 
                 setBasket(copyBasketArray);
               }}
